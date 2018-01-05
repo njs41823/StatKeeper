@@ -1,0 +1,622 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StatKeeperModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Games">
+          <Key>
+            <PropertyRef Name="GameId" />
+          </Key>
+          <Property Name="GameId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GameTime" Type="datetime" Nullable="false" />
+          <Property Name="HomeTeamId" Type="int" Nullable="false" />
+          <Property Name="AwayTeamId" Type="int" Nullable="false" />
+          <Property Name="HomeTeamRosterId" Type="int" Nullable="false" />
+          <Property Name="AwayTeamRosterId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Players">
+          <Key>
+            <PropertyRef Name="PlayerId" />
+          </Key>
+          <Property Name="PlayerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RosterPlayers">
+          <Key>
+            <PropertyRef Name="RosterPlayerId" />
+          </Key>
+          <Property Name="RosterPlayerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RosterId" Type="int" Nullable="false" />
+          <Property Name="PlayerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rosters">
+          <Key>
+            <PropertyRef Name="RosterId" />
+          </Key>
+          <Property Name="RosterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="GameId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatLines">
+          <Key>
+            <PropertyRef Name="StatLineId" />
+          </Key>
+          <Property Name="StatLineId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlayerId" Type="int" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="GameId" Type="int" Nullable="false" />
+          <Property Name="TwoPointFieldGoalsAttempted" Type="int" Nullable="false" />
+          <Property Name="TwoPointFieldGoalsMade" Type="int" Nullable="false" />
+          <Property Name="ThreePointFieldGoalsAttempted" Type="int" Nullable="false" />
+          <Property Name="ThreePointFieldGoalsMade" Type="int" Nullable="false" />
+          <Property Name="FreeThrowsAttempted" Type="int" Nullable="false" />
+          <Property Name="FreeThrowsMade" Type="int" Nullable="false" />
+          <Property Name="OffensiveRebounds" Type="int" Nullable="false" />
+          <Property Name="DefensiveRebounds" Type="int" Nullable="false" />
+          <Property Name="Assists" Type="int" Nullable="false" />
+          <Property Name="Steals" Type="int" Nullable="false" />
+          <Property Name="Blocks" Type="int" Nullable="false" />
+          <Property Name="Turnovers" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Teams">
+          <Key>
+            <PropertyRef Name="TeamId" />
+          </Key>
+          <Property Name="TeamId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Games_Rosters_Away">
+          <End Role="Rosters" Type="Self.Rosters" Multiplicity="1" />
+          <End Role="Games" Type="Self.Games" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rosters">
+              <PropertyRef Name="RosterId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="AwayTeamRosterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_Rosters_Home">
+          <End Role="Rosters" Type="Self.Rosters" Multiplicity="1" />
+          <End Role="Games" Type="Self.Games" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rosters">
+              <PropertyRef Name="RosterId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="HomeTeamRosterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_Teams_Away">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="Games" Type="Self.Games" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="HomeTeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_Teams_Home">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="Games" Type="Self.Games" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="AwayTeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RosterPlayers_Players">
+          <End Role="Players" Type="Self.Players" Multiplicity="1" />
+          <End Role="RosterPlayers" Type="Self.RosterPlayers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="PlayerId" />
+            </Principal>
+            <Dependent Role="RosterPlayers">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RosterPlayers_Rosters">
+          <End Role="Rosters" Type="Self.Rosters" Multiplicity="1" />
+          <End Role="RosterPlayers" Type="Self.RosterPlayers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rosters">
+              <PropertyRef Name="RosterId" />
+            </Principal>
+            <Dependent Role="RosterPlayers">
+              <PropertyRef Name="RosterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rosters_Games">
+          <End Role="Games" Type="Self.Games" Multiplicity="1" />
+          <End Role="Rosters" Type="Self.Rosters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="GameId" />
+            </Principal>
+            <Dependent Role="Rosters">
+              <PropertyRef Name="GameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rosters_Teams">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="Rosters" Type="Self.Rosters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="Rosters">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_Games">
+          <End Role="Games" Type="Self.Games" Multiplicity="1" />
+          <End Role="StatLines" Type="Self.StatLines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="GameId" />
+            </Principal>
+            <Dependent Role="StatLines">
+              <PropertyRef Name="GameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_Players">
+          <End Role="Players" Type="Self.Players" Multiplicity="1" />
+          <End Role="StatLines" Type="Self.StatLines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="PlayerId" />
+            </Principal>
+            <Dependent Role="StatLines">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_StatLines">
+          <End Role="StatLines" Type="Self.StatLines" Multiplicity="1" />
+          <End Role="StatLines1" Type="Self.StatLines" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="StatLines">
+              <PropertyRef Name="StatLineId" />
+            </Principal>
+            <Dependent Role="StatLines1">
+              <PropertyRef Name="StatLineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_Teams">
+          <End Role="Teams" Type="Self.Teams" Multiplicity="1" />
+          <End Role="StatLines" Type="Self.StatLines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="StatLines">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StatKeeperModelStoreContainer">
+          <EntitySet Name="Games" EntityType="Self.Games" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Players" EntityType="Self.Players" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RosterPlayers" EntityType="Self.RosterPlayers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rosters" EntityType="Self.Rosters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatLines" EntityType="Self.StatLines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teams" EntityType="Self.Teams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Games_Rosters_Away" Association="Self.FK_Games_Rosters_Away">
+            <End Role="Rosters" EntitySet="Rosters" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_Rosters_Home" Association="Self.FK_Games_Rosters_Home">
+            <End Role="Rosters" EntitySet="Rosters" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_Teams_Away" Association="Self.FK_Games_Teams_Away">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_Teams_Home" Association="Self.FK_Games_Teams_Home">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RosterPlayers_Players" Association="Self.FK_RosterPlayers_Players">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="RosterPlayers" EntitySet="RosterPlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RosterPlayers_Rosters" Association="Self.FK_RosterPlayers_Rosters">
+            <End Role="Rosters" EntitySet="Rosters" />
+            <End Role="RosterPlayers" EntitySet="RosterPlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rosters_Games" Association="Self.FK_Rosters_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="Rosters" EntitySet="Rosters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rosters_Teams" Association="Self.FK_Rosters_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Rosters" EntitySet="Rosters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_Games" Association="Self.FK_StatLines_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="StatLines" EntitySet="StatLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_Players" Association="Self.FK_StatLines_Players">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="StatLines" EntitySet="StatLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_StatLines" Association="Self.FK_StatLines_StatLines">
+            <End Role="StatLines" EntitySet="StatLines" />
+            <End Role="StatLines1" EntitySet="StatLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_Teams" Association="Self.FK_StatLines_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="StatLines" EntitySet="StatLines" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StatKeeperModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Game">
+          <Key>
+            <PropertyRef Name="GameId" />
+          </Key>
+          <Property Name="GameId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GameTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HomeTeamId" Type="Int32" Nullable="false" />
+          <Property Name="AwayTeamId" Type="Int32" Nullable="false" />
+          <Property Name="HomeTeamRosterId" Type="Int32" Nullable="false" />
+          <Property Name="AwayTeamRosterId" Type="Int32" Nullable="false" />
+          </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="PlayerId" />
+          </Key>
+          <Property Name="PlayerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="RosterPlayers" Relationship="Self.FK_RosterPlayers_Players" FromRole="Players" ToRole="RosterPlayers" />
+          <NavigationProperty Name="StatLines" Relationship="Self.FK_StatLines_Players" FromRole="Players" ToRole="StatLines" />
+        </EntityType>
+        <EntityType Name="RosterPlayer">
+          <Key>
+            <PropertyRef Name="RosterPlayerId" />
+          </Key>
+          <Property Name="RosterPlayerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RosterId" Type="Int32" Nullable="false" />
+          <Property Name="PlayerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Player" Relationship="Self.FK_RosterPlayers_Players" FromRole="RosterPlayers" ToRole="Players" />
+          <NavigationProperty Name="Roster" Relationship="Self.FK_RosterPlayers_Rosters" FromRole="RosterPlayers" ToRole="Rosters" />
+        </EntityType>
+        <EntityType Name="Roster">
+          <Key>
+            <PropertyRef Name="RosterId" />
+          </Key>
+          <Property Name="RosterId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <Property Name="GameId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatLine">
+          <Key>
+            <PropertyRef Name="StatLineId" />
+          </Key>
+          <Property Name="StatLineId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlayerId" Type="Int32" Nullable="false" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <Property Name="GameId" Type="Int32" Nullable="false" />
+          <Property Name="TwoPointFieldGoalsAttempted" Type="Int32" Nullable="false" />
+          <Property Name="TwoPointFieldGoalsMade" Type="Int32" Nullable="false" />
+          <Property Name="ThreePointFieldGoalsAttempted" Type="Int32" Nullable="false" />
+          <Property Name="ThreePointFieldGoalsMade" Type="Int32" Nullable="false" />
+          <Property Name="FreeThrowsAttempted" Type="Int32" Nullable="false" />
+          <Property Name="FreeThrowsMade" Type="Int32" Nullable="false" />
+          <Property Name="OffensiveRebounds" Type="Int32" Nullable="false" />
+          <Property Name="DefensiveRebounds" Type="Int32" Nullable="false" />
+          <Property Name="Assists" Type="Int32" Nullable="false" />
+          <Property Name="Steals" Type="Int32" Nullable="false" />
+          <Property Name="Blocks" Type="Int32" Nullable="false" />
+          <Property Name="Turnovers" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="TeamId" />
+          </Key>
+          <Property Name="TeamId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Games_Rosters_Away">
+          <End Role="Rosters" Type="Self.Roster" Multiplicity="1" />
+          <End Role="Games" Type="Self.Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rosters">
+              <PropertyRef Name="RosterId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="AwayTeamRosterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_Rosters_Home">
+          <End Role="Rosters" Type="Self.Roster" Multiplicity="1" />
+          <End Role="Games" Type="Self.Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rosters">
+              <PropertyRef Name="RosterId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="HomeTeamRosterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_Teams_Away">
+          <End Role="Teams" Type="Self.Team" Multiplicity="1" />
+          <End Role="Games" Type="Self.Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="HomeTeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Games_Teams_Home">
+          <End Role="Teams" Type="Self.Team" Multiplicity="1" />
+          <End Role="Games" Type="Self.Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="Games">
+              <PropertyRef Name="AwayTeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rosters_Games">
+          <End Role="Games" Type="Self.Game" Multiplicity="1" />
+          <End Role="Rosters" Type="Self.Roster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="GameId" />
+            </Principal>
+            <Dependent Role="Rosters">
+              <PropertyRef Name="GameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_Games">
+          <End Role="Games" Type="Self.Game" Multiplicity="1" />
+          <End Role="StatLines" Type="Self.StatLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="GameId" />
+            </Principal>
+            <Dependent Role="StatLines">
+              <PropertyRef Name="GameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RosterPlayers_Players">
+          <End Role="Players" Type="Self.Player" Multiplicity="1" />
+          <End Role="RosterPlayers" Type="Self.RosterPlayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="PlayerId" />
+            </Principal>
+            <Dependent Role="RosterPlayers">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_Players">
+          <End Role="Players" Type="Self.Player" Multiplicity="1" />
+          <End Role="StatLines" Type="Self.StatLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="PlayerId" />
+            </Principal>
+            <Dependent Role="StatLines">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RosterPlayers_Rosters">
+          <End Role="Rosters" Type="Self.Roster" Multiplicity="1" />
+          <End Role="RosterPlayers" Type="Self.RosterPlayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rosters">
+              <PropertyRef Name="RosterId" />
+            </Principal>
+            <Dependent Role="RosterPlayers">
+              <PropertyRef Name="RosterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rosters_Teams">
+          <End Role="Teams" Type="Self.Team" Multiplicity="1" />
+          <End Role="Rosters" Type="Self.Roster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="Rosters">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StatLines_Teams">
+          <End Role="Teams" Type="Self.Team" Multiplicity="1" />
+          <End Role="StatLines" Type="Self.StatLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Teams">
+              <PropertyRef Name="TeamId" />
+            </Principal>
+            <Dependent Role="StatLines">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StatKeeperEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Games" EntityType="Self.Game" />
+          <EntitySet Name="Players" EntityType="Self.Player" />
+          <EntitySet Name="RosterPlayers" EntityType="Self.RosterPlayer" />
+          <EntitySet Name="Rosters" EntityType="Self.Roster" />
+          <EntitySet Name="StatLines" EntityType="Self.StatLine" />
+          <EntitySet Name="Teams" EntityType="Self.Team" />
+          <AssociationSet Name="FK_Games_Rosters_Away" Association="Self.FK_Games_Rosters_Away">
+            <End Role="Rosters" EntitySet="Rosters" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_Rosters_Home" Association="Self.FK_Games_Rosters_Home">
+            <End Role="Rosters" EntitySet="Rosters" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_Teams_Away" Association="Self.FK_Games_Teams_Away">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Games_Teams_Home" Association="Self.FK_Games_Teams_Home">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Games" EntitySet="Games" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rosters_Games" Association="Self.FK_Rosters_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="Rosters" EntitySet="Rosters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_Games" Association="Self.FK_StatLines_Games">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="StatLines" EntitySet="StatLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RosterPlayers_Players" Association="Self.FK_RosterPlayers_Players">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="RosterPlayers" EntitySet="RosterPlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_Players" Association="Self.FK_StatLines_Players">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="StatLines" EntitySet="StatLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RosterPlayers_Rosters" Association="Self.FK_RosterPlayers_Rosters">
+            <End Role="Rosters" EntitySet="Rosters" />
+            <End Role="RosterPlayers" EntitySet="RosterPlayers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rosters_Teams" Association="Self.FK_Rosters_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="Rosters" EntitySet="Rosters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StatLines_Teams" Association="Self.FK_StatLines_Teams">
+            <End Role="Teams" EntitySet="Teams" />
+            <End Role="StatLines" EntitySet="StatLines" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StatKeeperModelStoreContainer" CdmEntityContainer="StatKeeperEntities">
+          <EntitySetMapping Name="Games">
+            <EntityTypeMapping TypeName="StatKeeperModel.Game">
+              <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="GameId" ColumnName="GameId" />
+                <ScalarProperty Name="GameTime" ColumnName="GameTime" />
+                <ScalarProperty Name="HomeTeamId" ColumnName="HomeTeamId" />
+                <ScalarProperty Name="AwayTeamId" ColumnName="AwayTeamId" />
+                <ScalarProperty Name="HomeTeamRosterId" ColumnName="HomeTeamRosterId" />
+                <ScalarProperty Name="AwayTeamRosterId" ColumnName="AwayTeamRosterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Players">
+            <EntityTypeMapping TypeName="StatKeeperModel.Player">
+              <MappingFragment StoreEntitySet="Players">
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RosterPlayers">
+            <EntityTypeMapping TypeName="StatKeeperModel.RosterPlayer">
+              <MappingFragment StoreEntitySet="RosterPlayers">
+                <ScalarProperty Name="RosterPlayerId" ColumnName="RosterPlayerId" />
+                <ScalarProperty Name="RosterId" ColumnName="RosterId" />
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rosters">
+            <EntityTypeMapping TypeName="StatKeeperModel.Roster">
+              <MappingFragment StoreEntitySet="Rosters">
+                <ScalarProperty Name="RosterId" ColumnName="RosterId" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="GameId" ColumnName="GameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatLines">
+            <EntityTypeMapping TypeName="StatKeeperModel.StatLine">
+              <MappingFragment StoreEntitySet="StatLines">
+                <ScalarProperty Name="StatLineId" ColumnName="StatLineId" />
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="GameId" ColumnName="GameId" />
+                <ScalarProperty Name="TwoPointFieldGoalsAttempted" ColumnName="TwoPointFieldGoalsAttempted" />
+                <ScalarProperty Name="TwoPointFieldGoalsMade" ColumnName="TwoPointFieldGoalsMade" />
+                <ScalarProperty Name="ThreePointFieldGoalsAttempted" ColumnName="ThreePointFieldGoalsAttempted" />
+                <ScalarProperty Name="ThreePointFieldGoalsMade" ColumnName="ThreePointFieldGoalsMade" />
+                <ScalarProperty Name="FreeThrowsAttempted" ColumnName="FreeThrowsAttempted" />
+                <ScalarProperty Name="FreeThrowsMade" ColumnName="FreeThrowsMade" />
+                <ScalarProperty Name="OffensiveRebounds" ColumnName="OffensiveRebounds" />
+                <ScalarProperty Name="DefensiveRebounds" ColumnName="DefensiveRebounds" />
+                <ScalarProperty Name="Assists" ColumnName="Assists" />
+                <ScalarProperty Name="Steals" ColumnName="Steals" />
+                <ScalarProperty Name="Blocks" ColumnName="Blocks" />
+                <ScalarProperty Name="Turnovers" ColumnName="Turnovers" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="StatKeeperModel.Team">
+              <MappingFragment StoreEntitySet="Teams">
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
